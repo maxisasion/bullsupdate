@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Bulls PRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #008000;
+            --secondary-color: #006400;
+            --danger-color: #8B0000;
+            --dark-color: #002000;
+            --light-color: #f0f0f0;
+            --gold: #FFD700;
+            --bitcoin: #F7931A;
+            --fractal-up: #4CAF50;
+            --fractal-down: #F44336;
+            --ma-color: #2196F3;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #f0f0f0;
+            color: #008000;
+            line-height: 1.6;
+            padding-bottom: 70px;
+            text-shadow: 0 0 1px #008000;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 15px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #008000;
+            box-shadow: 0 0 10px #008000;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 5px #ffffff;
+            border-bottom: 1px solid #008000;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #008000;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px #ffffff;
+            border: 1px solid #008000;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            box-shadow: 0 0 10px #008000;
+        }
+        
+        button.success {
+            background-color: var(--primary-color);
+        }
+        
+        button.success:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        button.danger {
+            background-color: var(--danger-color);
+            border: 1px solid #8B0000;
+        }
+        
+        button.danger:hover {
+            background-color: #6B0000;
+            box-shadow: 0 0 10px #8B0000;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-group button {
+            flex: 1;
+        }
+        
+        .hidden { 
+            display: none; 
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .signal-container {
+            background: white;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 0 5px rgba(0, 128, 0, 0.3);
+        }
+        
+        .signal-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .signal-detail {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid rgba(0, 128, 0, 0.2);
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #008000;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #006400;
+        }
+        
+        .chart-container {
+            height: 400px;
+            margin: 15px 0;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #008000;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            background: rgba(139, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 14px;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+        }
+        
+        .owner-info {
+            background: rgba(0, 128, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 14px;
+            border-left: 4px solid var(--primary-color);
+            border: 1px solid rgba(0, 128, 0, 0.2);
+        }
+        
+        .owner-info h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .owner-info p {
+            margin: 5px 0;
+        }
+        
+        .bitcoin {
+            color: var(--bitcoin);
+        }
+        
+        .gold {
+            color: var(--gold);
+        }
+        
+        .strategy-concept {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        
+        .fractal-up {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--fractal-up);
+            border: 1px solid var(--fractal-up);
+        }
+        
+        .fractal-down {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--fractal-down);
+            border: 1px solid var(--fractal-down);
+        }
+        
+        .moving-average {
+            background: rgba(33, 150, 243, 0.2);
+            color: var(--ma-color);
+            border: 1px solid var(--ma-color);
+        }
+        
+        .concepts-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            gap: 5px;
+        }
+        
+        .form-toggle {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .form-toggle a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .form-toggle a:hover {
+            text-decoration: underline;
+        }
+        
+        .license-key-display {
+            background: rgba(0, 128, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border: 1px dashed var(--primary-color);
+            text-align: center;
+        }
+        
+        .license-key-display h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .license-key {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: var(--dark-color);
+            margin: 10px 0;
+        }
+        
+        .activation-message {
+            background: rgba(0, 128, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+            border: 1px solid rgba(0, 128, 0, 0.2);
+        }
+        
+        .activation-code-form {
+            margin-top: 15px;
+        }
+        
+        .notification-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.5s forwards;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .notification-close {
+            margin-left: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>FX BULLS PRO</h2>
+            </div>
+            <div class="card-body">
+                <!-- Login Form -->
+                <div id="login-container">
+                    <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary-color);">MEMBER LOGIN</h2>
+                    
+                    <div id="login-form">
+                        <div class="form-group">
+                            <label for="loginEmail">EMAIL</label>
+                            <input id="loginEmail" type="email" placeholder="Your registered email" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginPassword">PASSWORD</label>
+                            <input id="loginPassword" type="password" placeholder="Your password" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginLicenseKey">LICENSE KEY</label>
+                            <input id="loginLicenseKey" placeholder="Enter your license key" />
+                        </div>
+                        
+                        <button id="loginBtn" class="success">LOGIN</button>
+                        
+                        <div class="form-toggle">
+                            Don't have an account? <a id="showRegister">Register here</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Registration Form -->
+                    <div id="register-form" class="hidden">
+                        <div class="activation-message">
+                            <strong>ACCOUNT ACTIVATION REQUIRED</strong>
+                            <p>Please contact your nearest mentor for account activation code to get access to the app</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="regName">FULL NAME</label>
+                            <input id="regName" placeholder="Your full name" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="regEmail">EMAIL</label>
+                            <input id="regEmail" type="email" placeholder="Your email address" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="regPassword">PASSWORD</label>
+                            <input id="regPassword" type="password" placeholder="Create a password" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="regConfirmPassword">CONFIRM PASSWORD</label>
+                            <input id="regConfirmPassword" type="password" placeholder="Confirm your password" />
+                        </div>
+                        
+                        <div id="activation-code-form" class="activation-code-form hidden">
+                            <div class="form-group">
+                                <label for="activationCode">ACTIVATION CODE</label>
+                                <input id="activationCode" placeholder="Enter activation code from mentor" />
+                            </div>
+                        </div>
+                        
+                        <button id="registerBtn" class="success">REGISTER</button>
+                        
+                        <div class="form-toggle">
+                            Already have an account? <a id="showLogin">Login here</a>
+                        </div>
+                    </div>
+                    
+                    <!-- License Key Display (shown after registration) -->
+                    <div id="license-key-display" class="license-key-display hidden">
+                        <h4>YOUR LICENSE KEY</h4>
+                        <p>Save this key - you'll need it to login</p>
+                        <div class="license-key" id="generated-license-key"></div>
+                        <p>You can now <a id="goToLogin">login with your email and this key</a></p>
+                    </div>
+                </div>
+
+                <!-- Dashboard -->
+                <div id="dashboard" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="color: var(--primary-color); margin: 0;">WELCOME, <span id="userNameDisplay"></span></h3>
+                        <button id="logoutBtn" style="padding: 8px 12px; background: var(--danger-color);">LOGOUT</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pairSelect">SELECT TRADING PAIR</label>
+                        <select id="pairSelect">
+                            <option value="EUR/USD">EUR/USD</option>
+                            <option value="GBP/USD">GBP/USD</option>
+                            <option value="USD/JPY">USD/JPY</option>
+                            <option value="AUD/USD">AUD/USD</option>
+                            <option value="USD/CAD">USD/CAD</option>
+                            <option value="BTC/USD" class="bitcoin">BTC/USD (BITCOIN)</option>
+                            <option value="XAU/USD" class="gold">XAU/USD (GOLD)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="signal-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 16px;" id="signal-pair">EUR/USD</div>
+                            <div style="font-size: 14px; padding: 4px 8px; border-radius: 4px; background: rgba(0, 128, 0, 0.2);" id="signal-direction">LOADING...</div>
+                        </div>
+                        
+                        <div id="signal-message" style="font-size: 14px; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: center; align-items: center; height: 30px;">
+                                <div class="spinner" style="width: 18px; height: 18px; border-width: 3px;"></div>
+                                <span style="margin-left: 8px;">ANALYZING MARKET DATA...</span>
+                            </div>
+                        </div>
+                        
+                        <div id="concepts-container" class="concepts-container">
+                            <!-- Strategy concepts will be displayed here -->
+                        </div>
+                        
+                        <div class="signal-details">
+                            <div class="signal-detail">
+                                <div class="detail-label">ENTRY PRICE</div>
+                                <div class="detail-value" id="entry-price">-</div>
+                            </div>
+                            <div class="signal-detail">
+                                <div class="detail-label">TAKE PROFIT</div>
+                                <div class="detail-value" id="take-profit">-</div>
+                            </div>
+                            <div class="signal-detail">
+                                <div class="detail-label">STOP LOSS</div>
+                                <div class="detail-value" id="stop-loss">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <iframe id="chartIframe"></iframe>
+                    </div>
+                    
+                    <button id="refreshBtn" style="width: 100%;" class="success">REFRESH SIGNAL</button>
+                </div>
+
+                <!-- Owner Information - Moved to bottom as requested -->
+                <div class="owner-info">
+                    <h4>FX BULLS PRO - V2+</h4>
+               
+                    <p><strong>OWNER:</strong> MFANOLA HAPE</p>
+                    <p><strong>CONTACT:</strong> 067 277 1746</p>
+                    <p><strong>EMAIL:</strong> FXBULLS1632@GMAIL.COM</p>
+                    <p><strong>MEMBERSHIP:</strong> R150 LIFETIME ACCESS</p>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Badge -->
+    <div id="notificationBadge" class="notification-badge">
+        <div class="notification-content">
+            <div class="notification-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div id="notificationMessage"></div>
+            <div class="notification-close" onclick="hideNotification()">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const config = {
+            apiKey: "149e57df395440e38120eb64b6acd135",
+            pipValues: {
+                "EUR/USD": 0.0001,
+                "GBP/USD": 0.0001,
+                "USD/JPY": 0.01,
+                "AUD/USD": 0.0001,
+                "USD/CAD": 0.0001,
+                "BTC/USD": 1,
+                "XAU/USD": 0.1
+            },
+            // More aggressive risk parameters
+            riskParameters: {
+                "EUR/USD": { tpMultiplier: 3, slMultiplier: 1 }, // Increased TP multiplier
+                "GBP/USD": { tpMultiplier: 3, slMultiplier: 1 },
+                "USD/JPY": { tpMultiplier: 3, slMultiplier: 1 },
+                "AUD/USD": { tpMultiplier: 3, slMultiplier: 1 },
+                "USD/CAD": { tpMultiplier: 3, slMultiplier: 1 },
+                "BTC/USD": { tpMultiplier: 4, slMultiplier: 1 }, // More aggressive for crypto
+                "XAU/USD": { tpMultiplier: 4, slMultiplier: 1 }  // More aggressive for gold
+            },
+            activationCodes: ["FXBULLS123", "TRADE2023", "PROFX567", "BULLS890", "ACTIVATE321"],
+            notificationDuration: 5000 // 5 seconds
+        };
+
+        // Generate 1000 unique license keys
+        function generateLicenseKeys(count) {
+            const keys = [];
+            for (let i = 0; i < count; i++) {
+                const segments = [
+                    Math.random().toString(36).substring(2, 6).toUpperCase(),
+                    Math.random().toString(36).substring(2, 6).toUpperCase(),
+                    Math.random().toString(36).substring(2, 6).toUpperCase(),
+                    Math.random().toString(36).substring(2, 6).toUpperCase()
+                ];
+                keys.push(segments.join('-'));
+            }
+            return keys;
+        }
+
+        // Initialize with 1000 license keys
+        const licenseKeys = generateLicenseKeys(1000);
+        let availableKeys = [...licenseKeys];
+        let usedKeys = {};
+
+        // User database (in a real app, this would be server-side)
+        const userDatabase = {};
+
+        // DOM Elements
+        const elements = {
+            loginContainer: document.getElementById("login-container"),
+            loginForm: document.getElementById("login-form"),
+            registerForm: document.getElementById("register-form"),
+            licenseKeyDisplay: document.getElementById("license-key-display"),
+            dashboard: document.getElementById("dashboard"),
+            userNameDisplay: document.getElementById("userNameDisplay"),
+            pairSelect: document.getElementById("pairSelect"),
+            signalPair: document.getElementById("signal-pair"),
+            signalDirection: document.getElementById("signal-direction"),
+            signalMessage: document.getElementById("signal-message"),
+            entryPrice: document.getElementById("entry-price"),
+            takeProfit: document.getElementById("take-profit"),
+            stopLoss: document.getElementById("stop-loss"),
+            chartIframe: document.getElementById("chartIframe"),
+            loginBtn: document.getElementById("loginBtn"),
+            registerBtn: document.getElementById("registerBtn"),
+            refreshBtn: document.getElementById("refreshBtn"),
+            logoutBtn: document.getElementById("logoutBtn"),
+            conceptsContainer: document.getElementById("concepts-container"),
+            showRegister: document.getElementById("showRegister"),
+            showLogin: document.getElementById("showLogin"),
+            goToLogin: document.getElementById("goToLogin"),
+            generatedLicenseKey: document.getElementById("generated-license-key"),
+            activationCodeForm: document.getElementById("activation-code-form"),
+            activationCodeInput: document.getElementById("activationCode"),
+            // Login form fields
+            loginEmail: document.getElementById("loginEmail"),
+            loginPassword: document.getElementById("loginPassword"),
+            loginLicenseKey: document.getElementById("loginLicenseKey"),
+            // Registration form fields
+            regName: document.getElementById("regName"),
+            regEmail: document.getElementById("regEmail"),
+            regPassword: document.getElementById("regPassword"),
+            regConfirmPassword: document.getElementById("regConfirmPassword"),
+            // Notification elements
+            notificationBadge: document.getElementById("notificationBadge"),
+            notificationMessage: document.getElementById("notificationMessage")
+        };
+
+        // Show notification
+        function showNotification(message) {
+            elements.notificationMessage.textContent = message;
+            elements.notificationBadge.style.display = 'flex';
+            
+            // Auto-hide after duration
+            setTimeout(hideNotification, config.notificationDuration);
+        }
+
+        // Hide notification
+        function hideNotification() {
+            elements.notificationBadge.style.display = 'none';
+        }
+
+        // Initialize the app
+        function init() {
+            // Set up event listeners
+            elements.loginBtn.addEventListener("click", handleLogin);
+            elements.registerBtn.addEventListener("click", handleRegister);
+            elements.refreshBtn.addEventListener("click", generateSignal);
+            elements.logoutBtn.addEventListener("click", handleLogout);
+            elements.pairSelect.addEventListener("change", handlePairChange);
+            elements.showRegister.addEventListener("click", showRegisterForm);
+            elements.showLogin.addEventListener("click", showLoginForm);
+            elements.goToLogin.addEventListener("click", showLoginForm);
+            
+            // Check if already logged in
+            if (localStorage.getItem("loggedIn") === "true") {
+                const userEmail = localStorage.getItem("userEmail");
+                const userName = localStorage.getItem("userName");
+                if (userEmail && userName) {
+                    showDashboard(userName);
+                }
+            }
+            
+            // Request notification permission
+            if ('Notification' in window) {
+                Notification.requestPermission();
+            }
+        }
+        
+        // Show registration form
+        function showRegisterForm() {
+            elements.loginForm.classList.add("hidden");
+            elements.registerForm.classList.remove("hidden");
+            elements.licenseKeyDisplay.classList.add("hidden");
+            elements.activationCodeForm.classList.add("hidden");
+        }
+        
+        // Show login form
+        function showLoginForm() {
+            elements.registerForm.classList.add("hidden");
+            elements.loginForm.classList.remove("hidden");
+            elements.licenseKeyDisplay.classList.add("hidden");
+        }
+        
+        // Handle registration
+        function handleRegister() {
+            const name = elements.regName.value.trim();
+            const email = elements.regEmail.value.trim().toLowerCase();
+            const password = elements.regPassword.value;
+            const confirmPassword = elements.regConfirmPassword.value;
+            
+            // Validate inputs
+            if (!name || !email || !password || !confirmPassword) {
+                alert("Please fill in all fields");
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters");
+                return;
+            }
+            
+            if (userDatabase[email]) {
+                alert("Email already registered");
+                return;
+            }
+            
+            // Check if activation code form should be shown
+            if (elements.activationCodeForm.classList.contains("hidden")) {
+                elements.activationCodeForm.classList.remove("hidden");
+                alert("Please enter your activation code to proceed");
+                return;
+            }
+            
+            // Validate activation code
+            const activationCode = elements.activationCodeInput.value.trim();
+            if (!config.activationCodes.includes(activationCode)) {
+                alert("Invalid activation code. Please contact your mentor for a valid code.");
+                return;
+            }
+            
+            if (availableKeys.length === 0) {
+                alert("No more license keys available");
+                return;
+            }
+            
+            // Assign a license key
+            const licenseKey = availableKeys.pop();
+            usedKeys[licenseKey] = email;
+            
+            // Create user account
+            userDatabase[email] = {
+                name: name,
+                password: password,
+                licenseKey: licenseKey
+            };
+            
+            // Show license key to user
+            elements.generatedLicenseKey.textContent = licenseKey;
+            elements.registerForm.classList.add("hidden");
+            elements.licenseKeyDisplay.classList.remove("hidden");
+        }
+        
+        // Handle login
+        function handleLogin() {
+            const email = elements.loginEmail.value.trim().toLowerCase();
+            const password = elements.loginPassword.value;
+            const licenseKey = elements.loginLicenseKey.value.trim();
+            
+            // Validate inputs
+            if (!email || !password || !licenseKey) {
+                alert("Please fill in all fields");
+                return;
+            }
+            
+            // Check if user exists
+            const user = userDatabase[email];
+            if (!user) {
+                alert("User not found. Please register.");
+                return;
+            }
+            
+            // Check password
+            if (user.password !== password) {
+                alert("Incorrect password");
+                return;
+            }
+            
+            // Check license key
+            if (user.licenseKey !== licenseKey) {
+                alert("Invalid license key");
+                return;
+            }
+            
+            // Save login state
+            localStorage.setItem("loggedIn", "true");
+            localStorage.setItem("userEmail", email);
+            localStorage.setItem("userName", user.name);
+            localStorage.setItem("licenseKey", licenseKey);
+            
+            // Show dashboard
+            showDashboard(user.name);
+        }
+        
+        // Show dashboard
+        function showDashboard(userName) {
+            elements.loginContainer.classList.add("hidden");
+            elements.dashboard.classList.remove("hidden");
+            
+            // Set username
+            elements.userNameDisplay.textContent = userName.toUpperCase();
+            
+            // Initialize dashboard
+            updateChart();
+            generateSignal();
+        }
+        
+        // Handle logout
+        function handleLogout() {
+            // Clear state and storage
+            localStorage.clear();
+            location.reload();
+        }
+        
+        // Handle pair change
+        function handlePairChange() {
+            updateChart();
+            generateSignal();
+        }
+        
+        // Update TradingView chart
+        function updateChart() {
+            const pair = elements.pairSelect.value;
+            const pairName = elements.pairSelect.options[elements.pairSelect.selectedIndex].text;
+            
+            // Update signal pair display
+            elements.signalPair.textContent = pairName.toUpperCase();
+            
+            // Update iframe
+            const tradingViewSymbol = pair.replace("/", "");
+            const iframeSrc = `https://s.tradingview.com/widgetembed/?symbol=${tradingViewSymbol}&interval=15&theme=dark&style=1&timezone=Africa%2FJohannesburg&hide_side_toolbar=true`;
+            elements.chartIframe.src = iframeSrc;
+        }
+        
+        // Fetch current price from Twelve Data API
+        async function getCurrentPrice(symbol) {
+            try {
+                elements.refreshBtn.disabled = true;
+                elements.refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> LOADING...';
+                
+                const response = await fetch(`https://api.twelvedata.com/price?symbol=${symbol}&apikey=${config.apiKey}`);
+                const data = await response.json();
+                
+                if (data.price) {
+                    return parseFloat(data.price);
+                } else {
+                    throw new Error(data.message || "Failed to fetch price");
+                }
+            } catch (error) {
+                console.error("Error fetching price:", error);
+                showError(`FAILED TO GET MARKET DATA: ${error.message}`);
+                return null;
+            } finally {
+                elements.refreshBtn.disabled = false;
+                elements.refreshBtn.textContent = "REFRESH SIGNAL";
+            }
+        }
+        
+        // More aggressive market analysis with tighter TP/SL
+        async function analyzeMarket(pair, currentPrice) {
+            // Simulate finding fractals and MA with random probabilities
+            const concepts = [];
+            
+            // More aggressive trending probability (70% chance of trend)
+            const isTrending = Math.random() > 0.3;
+            
+            // Simulate Moving Average (20 period)
+            const ma20 = currentPrice * (1 + (Math.random() * 0.001 * (Math.random() > 0.5 ? 1 : -1)));
+            concepts.push({
+                type: "moving-average",
+                value: ma20.toFixed(5),
+                position: currentPrice > ma20 ? "above" : "below"
+            });
+            
+            // More aggressive fractal detection (50% chance each)
+            if (Math.random() > 0.5) {
+                concepts.push({
+                    type: "fractal-up",
+                    value: (currentPrice * (1 - (Math.random() * 0.0005))).toFixed(5) // Tighter support
+                });
+            }
+            
+            if (Math.random() > 0.5) {
+                concepts.push({
+                    type: "fractal-down",
+                    value: (currentPrice * (1 + (Math.random() * 0.0005))).toFixed(5) // Tighter resistance
+                });
+            }
+            
+            // More aggressive direction determination
+            let direction;
+            if (currentPrice > ma20) {
+                direction = Math.random() > 0.2 ? "BUY" : "SELL"; // 80% chance BUY when above MA
+            } else {
+                direction = Math.random() > 0.2 ? "SELL" : "BUY"; // 80% chance SELL when below MA
+            }
+            
+            return {
+                concepts: concepts,
+                direction: direction,
+                ma20: ma20
+            };
+        }
+        
+        // Generate trading signal with tighter TP/SL
+        async function generateSignal() {
+            // Show loading state
+            elements.signalMessage.innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; height: 30px;">
+                    <div class="spinner" style="width: 18px; height: 18px; border-width: 3px;"></div>
+                    <span style="margin-left: 8px;">ANALYZING MARKET DATA...</span>
+                </div>
+            `;
+            
+            const pair = elements.pairSelect.value;
+            const currentPrice = await getCurrentPrice(pair);
+            
+            if (currentPrice === null) return;
+            
+            // Analyze market using Fractals and MA
+            const analysis = await analyzeMarket(pair, currentPrice);
+            
+            // Get risk parameters for this pair
+            const riskParams = config.riskParameters[pair] || config.riskParameters["EUR/USD"];
+            const pipSize = config.pipValues[pair] || 0.0001;
+            
+            // Determine entry, TP, SL based on strategy
+            let entry, tp, sl, conceptDetails = [];
+            
+            // Find the most relevant concepts
+            const ma20 = analysis.concepts.find(c => c.type === "moving-average");
+            const fractalUp = analysis.concepts.find(c => c.type === "fractal-up");
+            const fractalDown = analysis.concepts.find(c => c.type === "fractal-down");
+            
+            // Add concepts to display
+            if (ma20) {
+                conceptDetails.push({
+                    type: "moving-average",
+                    label: `MA20: ${ma20.value}`,
+                    description: `20 PERIOD MOVING AVERAGE (PRICE ${ma20.position.toUpperCase()})`
+                });
+            }
+            
+            if (fractalUp) {
+                conceptDetails.push({
+                    type: "fractal-up",
+                    label: `Fractal↑: ${fractalUp.value}`,
+                    description: "BULLISH FRACTAL (POTENTIAL SUPPORT)"
+                });
+            }
+            
+            if (fractalDown) {
+                conceptDetails.push({
+                    type: "fractal-down",
+                    label: `Fractal↓: ${fractalDown.value}`,
+                    description: "BEARISH FRACTAL (POTENTIAL RESISTANCE)"
+                });
+            }
+            
+            // Determine entry price with tighter range
+            if (analysis.direction === "BUY") {
+                // For buy signals, use the higher of fractal up or MA20 with tighter range
+                const potentialEntries = [];
+                if (fractalUp) potentialEntries.push(parseFloat(fractalUp.value));
+                if (ma20) potentialEntries.push(parseFloat(ma20.value));
+                
+                entry = potentialEntries.length > 0 ? 
+                    Math.max(...potentialEntries) : 
+                    (currentPrice * 0.9998); // Tighter entry
+                
+                // Calculate tighter TP/SL with higher multiplier
+                sl = (entry * (1 - (riskParams.slMultiplier * 0.0005))).toFixed(5); // Tighter SL
+                tp = (entry * (1 + (riskParams.tpMultiplier * 0.0005))).toFixed(5); // Tighter but higher multiplier TP
+            } else {
+                // For sell signals, use the lower of fractal down or MA20 with tighter range
+                const potentialEntries = [];
+                if (fractalDown) potentialEntries.push(parseFloat(fractalDown.value));
+                if (ma20) potentialEntries.push(parseFloat(ma20.value));
+                
+                entry = potentialEntries.length > 0 ? 
+                    Math.min(...potentialEntries) : 
+                    (currentPrice * 1.0002); // Tighter entry
+                
+                // Calculate tighter TP/SL with higher multiplier
+                sl = (entry * (1 + (riskParams.slMultiplier * 0.0005))).toFixed(5); // Tighter SL
+                tp = (entry * (1 - (riskParams.tpMultiplier * 0.0005))).toFixed(5); // Tighter but higher multiplier TP
+            }
+            
+            // For Bitcoin and Gold, adjust decimal places
+            const decimalPlaces = pair === "BTC/USD" ? 2 : (pair === "XAU/USD" ? 2 : 5);
+            entry = parseFloat(entry).toFixed(decimalPlaces);
+            tp = parseFloat(tp).toFixed(decimalPlaces);
+            sl = parseFloat(sl).toFixed(decimalPlaces);
+            
+            const signal = {
+                pair: pair,
+                direction: analysis.direction,
+                entry: entry,
+                tp: tp,
+                sl: sl,
+                timestamp: new Date(),
+                currentPrice: currentPrice.toFixed(decimalPlaces),
+                concepts: conceptDetails
+            };
+            
+            displaySignal(signal);
+            
+            // Show push notification
+            const notificationText = `${signal.pair} ${signal.direction} SIGNAL\nEntry: ${signal.entry}\nTP: ${signal.tp} | SL: ${signal.sl}`;
+            showNotification(notificationText);
+            
+            // Show browser notification if permission granted
+            if (Notification.permission === "granted") {
+                new Notification(`FX Bulls PRO - ${signal.pair} ${signal.direction}`, {
+                    body: notificationText,
+                    icon: "https://via.placeholder.com/64/008000/FFFFFF?text=FX"
+                });
+            }
+        }
+        
+        // Display signal with concepts
+        function displaySignal(signal) {
+            // Update direction
+            elements.signalDirection.textContent = signal.direction;
+            elements.signalDirection.style.background = signal.direction === "BUY" 
+                ? "rgba(0, 128, 0, 0.2)" 
+                : "rgba(139, 0, 0, 0.2)";
+            
+            // Color code for crypto and commodities
+            if (signal.pair === "BTC/USD") {
+                elements.signalDirection.style.color = "var(--bitcoin)";
+            } else if (signal.pair === "XAU/USD") {
+                elements.signalDirection.style.color = "var(--gold)";
+            } else {
+                elements.signalDirection.style.color = "#008000";
+            }
+            
+            // Update signal message
+            elements.signalMessage.innerHTML = `
+                <div>SIGNAL GENERATED: ${signal.timestamp.toLocaleTimeString()}</div>
+                <div>CURRENT PRICE: ${signal.currentPrice}</div>
+            `;
+            
+            // Display strategy concepts
+            elements.conceptsContainer.innerHTML = "";
+            signal.concepts.forEach(concept => {
+                const conceptEl = document.createElement("div");
+                conceptEl.className = `strategy-concept ${concept.type}`;
+                conceptEl.textContent = concept.label;
+                conceptEl.title = concept.description;
+                elements.conceptsContainer.appendChild(conceptEl);
+            });
+            
+            // Update details
+            elements.entryPrice.textContent = signal.entry;
+            elements.takeProfit.textContent = signal.tp;
+            elements.stopLoss.textContent = signal.sl;
+        }
+        
+        // Show error message
+        function showError(message) {
+            elements.signalMessage.innerHTML = `
+                <div class="error-message">${message}</div>
+            `;
+        }
+        
+        // Initialize the app when DOM is loaded
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>
